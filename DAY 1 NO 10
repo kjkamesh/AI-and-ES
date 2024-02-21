@@ -1,0 +1,54 @@
+from queue import PriorityQueue
+
+class Graph:
+    def __init__(self):
+        self.nodes = set()
+        self.edges = {}
+
+    def add_node(self, value):
+        self.nodes.add(value)
+        self.edges[value] = []
+
+    def add_edge(self, from_node, to_node, weight):
+        self.edges[from_node].append((to_node, weight))
+        self.edges[to_node].append((from_node, weight))  # Assuming undirected graph
+
+def best_first_search(graph, start, goal):
+    visited = set()
+    priority_queue = PriorityQueue()
+    priority_queue.put((0, start))  # (priority, node)
+
+    while not priority_queue.empty():
+        current_cost, current_node = priority_queue.get()
+
+        if current_node in visited:
+            continue
+
+        print("Visiting node:", current_node)
+
+        visited.add(current_node)
+
+        if current_node == goal:
+            print("Goal reached!")
+            break
+
+        for neighbor, cost in graph.edges[current_node]:
+            if neighbor not in visited:
+                priority_queue.put((cost, neighbor))
+
+# Example usage
+graph = Graph()
+graph.add_node("A")
+graph.add_node("B")
+graph.add_node("C")
+graph.add_node("D")
+
+graph.add_edge("A", "B", 3)
+graph.add_edge("A", "C", 5)
+graph.add_edge("B", "D", 2)
+graph.add_edge("C", "D", 8)
+
+start_node = "A"
+goal_node = "D"
+
+best_first_search(graph, start_node, goal_node)

@@ -1,0 +1,47 @@
+def is_valid_state(state):
+    missionaries, cannibals, boat = state
+    return (missionaries >= 0 and cannibals >= 0 and
+            missionaries <= 3 and cannibals <= 3 and
+            (missionaries == 0 or missionaries >= cannibals) and
+            (3 - missionaries == 0 or (3 - missionaries) >= (3 - cannibals)))
+
+def display_state(state):
+    missionaries, cannibals, boat = state
+    print(f"On the left side: {missionaries} missionaries, {cannibals} cannibals")
+    print(f"On the right side: {3 - missionaries} missionaries, {3 - cannibals} cannibals")
+    print(f"Boat position: {'Left' if boat == 0 else 'Right'}")
+
+def get_next_states(state):
+    moves = []
+    missionaries, cannibals, boat = state
+
+    for m in range(3):
+        for c in range(3):
+            if 1 <= m + c <= 2:
+                new_state = (missionaries - m, cannibals - c, 1 - boat)
+                if is_valid_state(new_state):
+                    moves.append(new_state)
+
+    return moves
+
+def solve_puzzle():
+    initial_state = (3, 3, 0)
+    goal_state = (0, 0, 1)
+    visited = set()
+    stack = [initial_state]
+
+    while stack:
+        current_state = stack.pop()
+
+        if current_state == goal_state:
+            print("Puzzle solved!")
+            break
+
+        if current_state not in visited:
+            visited.add(current_state)
+            display_state(current_state)
+
+            next_states = get_next_states(current_state)
+            stack.extend(next_states)
+
+solve_puzzle()

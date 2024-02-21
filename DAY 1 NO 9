@@ -1,0 +1,40 @@
+from itertools import permutations
+
+def calculate_total_distance(route, distances):
+    total_distance = 0
+    for i in range(len(route) - 1):
+        total_distance += distances[route[i]][route[i + 1]]
+    total_distance += distances[route[-1]][route[0]]  # Return to the starting city
+    return total_distance
+
+def traveling_salesman_bruteforce(cities, distances):
+    n = len(cities)
+    if n < 2:
+        return "Not enough cities to form a route."
+
+    # Generate all possible routes
+    all_routes = list(permutations(range(n)))
+
+    # Calculate total distance for each route
+    min_distance = float('inf')
+    best_route = None
+    for route in all_routes:
+        distance = calculate_total_distance(route, distances)
+        if distance < min_distance:
+            min_distance = distance
+            best_route = route
+
+    return best_route, min_distance
+
+# Example usage
+cities = ["A", "B", "C", "D"]
+distances = [
+    [0, 2, 9, 10],
+    [1, 0, 6, 4],
+    [15, 7, 0, 8],
+    [6, 3, 12, 0]
+]
+
+best_route, min_distance = traveling_salesman_bruteforce(cities, distances)
+print("Best Route:", [cities[i] for i in best_route])
+print("Minimum Distance:", min_distance)

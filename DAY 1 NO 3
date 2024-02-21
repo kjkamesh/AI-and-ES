@@ -1,0 +1,28 @@
+def water_jug_problem():
+    jug_4 = 4  # 4-gallon jug
+    jug_3 = 3  # 3-gallon jug
+
+    # Initial state
+    current_state = (0, 0)  # (gallons in jug_4, gallons in jug_3)
+
+    while current_state[0] != 2:  # Continue until 2 gallons are in jug_4
+        print(f"Current state: {current_state}")
+
+        # Fill the 4-gallon jug
+        current_state = (jug_4, current_state[1])
+        print(f"Fill 4-gallon jug: {current_state}")
+
+        # Pour water from the 4-gallon jug to the 3-gallon jug
+        transfer = min(current_state[0], jug_3 - current_state[1])
+        current_state = (current_state[0] - transfer, current_state[1] + transfer)
+        print(f"Pour water to 3-gallon jug: {current_state}")
+
+        # Empty the 3-gallon jug
+        current_state = (current_state[0], 0)
+        print(f"Empty 3-gallon jug: {current_state}")
+
+    print(f"Final state: {current_state}")
+    print("Solution found!")
+
+# Execute the function to solve the problem
+water_jug_problem()

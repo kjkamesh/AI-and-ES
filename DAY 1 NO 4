@@ -1,0 +1,47 @@
+def is_mapping_possible(arr, s):
+    # Function to convert a string to its corresponding number
+    def string_to_number(string, char_to_digit):
+        return int(''.join(str(char_to_digit[char]) for char in string))
+
+    # Recursive function to find a valid mapping
+    def find_mapping(index, char_to_digit, used_digits):
+        if index == len(arr):
+            # Check if the sum of the encoded values of strings in arr equals the value of string s
+            return string_to_number(arr[0], char_to_digit) + string_to_number(arr[1], char_to_digit) == string_to_number(s, char_to_digit)
+
+        current_char = arr[index][0]
+        for digit in range(10):
+            # Skip leading zeros
+            if digit == 0 and current_char in char_to_digit:
+                continue
+            
+            # Check if the current digit is not already used
+            if digit not in used_digits:
+                # Try the current digit and recurse
+                char_to_digit[current_char] = digit
+                used_digits.add(digit)
+                
+                if find_mapping(index + 1, char_to_digit, used_digits):
+                    return True
+                
+                # Backtrack if the current digit does not lead to a solution
+                char_to_digit.pop(current_char)
+                used_digits.remove(digit)
+
+        return False
+
+    char_to_digit = {}
+    used_digits = set()
+
+    # Start the recursive function
+    return find_mapping(0, char_to_digit, used_digits)
+
+# Example usage
+arr = ["SEND", "MORE"]
+s = "MONEY"
+result = is_mapping_possible(arr, s)
+
+if result:
+    print("Yes")
+else:
+    print("No")

@@ -1,0 +1,48 @@
+import math
+import random
+
+def simulated_annealing(initial_state, objective_function, temperature, cooling_rate, iterations):
+    current_state = initial_state
+    current_energy = objective_function(current_state)
+
+    for iteration in range(iterations):
+        # Generate a random neighboring state
+        neighbor_state = generate_neighbor(current_state)
+
+        # Calculate the energy (objective function value) of the neighboring state
+        neighbor_energy = objective_function(neighbor_state)
+
+        # Accept the neighboring state if it has lower energy
+        if neighbor_energy < current_energy or random.uniform(0, 1) < math.exp((current_energy - neighbor_energy) / temperature):
+            current_state = neighbor_state
+            current_energy = neighbor_energy
+
+        # Cool down the temperature
+        temperature *= 1 - cooling_rate
+
+    return current_state, current_energy
+
+def generate_neighbor(state):
+    # This is a simple example, you may need to define your own logic based on the problem
+    return [x + random.uniform(-0.1, 0.1) for x in state]
+
+# Example usage:
+def objective_function(x):
+    # A simple objective function, you should replace this with your own function
+    return sum(xi**2 for xi in x)
+
+# Initial state (randomly chosen)
+initial_state = [random.uniform(-5, 5) for _ in range(3)]
+
+# Simulated Annealing parameters
+initial_temperature = 100.0
+cooling_rate = 0.02
+iterations = 1000
+
+# Run the Simulated Annealing algorithm
+final_state, final_energy = simulated_annealing(initial_state, objective_function, initial_temperature, cooling_rate, iterations)
+
+# Print the result
+print("Initial State:", initial_state)
+print("Final State:", final_state)
+print("Objective Function Value (Energy) at Final State:", final_energy)

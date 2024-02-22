@@ -1,0 +1,40 @@
+import random
+
+def hill_climbing(problem, max_iterations=1000):
+    current_state = problem.initial_state()
+
+    for _ in range(max_iterations):
+        neighbors = problem.neighbors(current_state)
+        if not neighbors:
+            break  # No more moves possible
+
+        next_state = max(neighbors, key=problem.evaluate)
+        if problem.evaluate(next_state) <= problem.evaluate(current_state):
+            break  # Reached a peak or local minimum
+
+        current_state = next_state
+
+    return current_state
+
+class SimpleHillClimbingProblem:
+    def __init__(self):
+        self.current_state = random.randint(1, 100)
+
+    def initial_state(self):
+        return self.current_state
+
+    def neighbors(self, state):
+        return [state - 1, state + 1]
+
+    def evaluate(self, state):
+        # Simple evaluation function (negative of the absolute difference from the target)
+        target = 50
+        return -abs(state - target)
+
+# Example usage:
+problem = SimpleHillClimbingProblem()
+result = hill_climbing(problem)
+
+print("Initial state:", problem.initial_state())
+print("Final state:", result)
+print("Value at final state:", problem.evaluate(result))

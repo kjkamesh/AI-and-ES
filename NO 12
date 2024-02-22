@@ -1,0 +1,51 @@
+class Graph:
+    def __init__(self):
+        self.graph = {}
+
+    def add_edge(self, u, v):
+        self.graph.setdefault(u, []).append(v)
+        self.graph.setdefault(v, []).append(u)
+
+    def is_safe(self, node, color, colored_nodes):
+        for neighbor in self.graph.get(node, []):
+            if neighbor in colored_nodes and colored_nodes[neighbor] == color:
+                return False
+        return True
+
+    def graph_coloring_util(self, m, colored_nodes, node):
+        if node not in colored_nodes:
+            for color in range(1, m+1):
+                if self.is_safe(node, color, colored_nodes):
+                    colored_nodes[node] = color
+                    for neighbor in self.graph.get(node, []):
+                        self.graph_coloring_util(m, colored_nodes, neighbor)
+                    break
+            else:
+                return False
+        return True
+
+    def graph_coloring(self, m):
+        colored_nodes = {}
+        for node in self.graph:
+            if not self.graph_coloring_util(m, colored_nodes, node):
+                return None  # No valid coloring exists with 'm' colors
+        return colored_nodes
+
+# Example usage:
+g = Graph()
+g.add_edge(1, 2)
+g.add_edge(1, 3)
+g.add_edge(2, 4)
+g.add_edge(3, 4)
+
+# Choose the number of colors (m) for the graph coloring
+num_colors = 3
+
+colored_nodes = g.graph_coloring(num_colors)
+
+if colored_nodes:
+    print("Graph Coloring:")
+    for node, color in colored_nodes.items():
+        print(f"Node {node}: Color {color}")
+else:
+    print(f"No valid coloring with {num_colors} colors exists.")
